@@ -141,11 +141,49 @@ The size of the output can be calculated with the help of a simple formula:
 
 # Building Deeper CNNs
 
+* Networks with more convolution layers are called "deep" networks, and they may have more power to fit complex data, because of their ability to create hierarchical representations of the data that they fit.
 * Multiple convolutional layers can be added to build deeper CNNs.
 
 ![](images/deep_cnn.PNG)
 
 * Deeper CNNs are needed to gradually build up representation of objects in the images.
 * The first layers can capture features such as oriented lined, the last few layers can capture complex objects based on the outputs of these layers. Hence, deeper networks are more useful in image processing.
+* Hence, deep networks may require more data and more computations to fit.
 
+## Counting Parameters
+
+* We need to know how many parameters a CNN has, so we can adjust the model architecture, to reduce this number or shift parameters from one part of the network to another. 
+* Number of parameters in a model can be calculated as follows:
+
+* For a model layer with 10 units and input_shape of (784, )
+
+        No. of parameters = 784*10 + 10
+
+Number of pixels times the number of units and 10 added for the bias terms.
+
+Similarly, number of parameters can be calculated for rest of the layers. 
+
+In keras, these details can be obtained using
+
+        model.summary()
+
+## Pooling Operations
+
+* One challenge with deep CNNs is reducing the number of parameters. 
+* To mitigate this, we can summarise the output of the convolutional layers. For example, we can summarise the output of a group of pixels by their maximal value. This is called *Max Pooling*.
+* This ensures that the output has only about a quarter of the features and shows only the brightest values.
+* Pooling can help us if we want to train the network more rapidly, or if we don't have enough data to learn a very large number of parameters.
+
+![](images/max_pooling.PNG)
+
+* In keras, Max Pooling can be done with the help of MaxPool2D object.
+
+        from keras.models import Sequential
+        from keras.layers import Dense, Conv2D, Flatten, MaxPool2D
+
+        model = Sequential()
+        model.add(Conv2D(...))
+        model.add(MaxPool2D(2))
+
+    After each convolutional layer, we add a pooling layer. Here, 2 indicates the size of the Pooling window, i.e. Pooling will take max over a window of 2 x 2 pixels.
 
