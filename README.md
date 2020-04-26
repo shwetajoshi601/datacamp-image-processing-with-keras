@@ -256,3 +256,6 @@ The result of this image is:
     ![](images/filtered_image.PNG)
 
 We can see that this kernel depicts the edges of an object in the image.
+
+# Links
+* [Keras Cheatsheet](https://datacamp-community-prod.s3.amazonaws.com/94fc681d-5422-40cb-a129-2218e9522f17)
