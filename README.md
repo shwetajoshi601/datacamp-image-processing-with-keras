@@ -187,3 +187,72 @@ In keras, these details can be obtained using
 
     After each convolutional layer, we add a pooling layer. Here, 2 indicates the size of the Pooling window, i.e. Pooling will take max over a window of 2 x 2 pixels.
 
+# Improving Deep Convolutional Networks
+
+## Regularisation
+
+Deep CNNs often tend to overfit the data. To avoid overfitting, regularisation can be used.
+There are two techniques of Regularisation:
+
+**1.Dropout**
+
+* In each learning step, we select a subset of the units.
+* This subset is ignored in the forward pass.
+* and also ignored in the backpropagation of errors.
+
+![](images/dropout.PNG)
+
+* This method tends to work well because if some nodes in the network become too sensitive to noise in the data, the other nodes compensate for it.
+
+In keras, Dropout is implemented as a layer. We add this layer after the layer in which we want to ignore subsets.
+
+        model.add(Conv2D(...))
+        model.add(Dropout(0.25))
+
+Here, 0.25 indicates the proportion of the units to be ignored.
+
+**2.Batch Normalization**
+
+* In this technique, the output of a particular layer is rescaled so that it always has zero mean and a standard deviation of 1 in every batch of training.
+* It solves the problems that arise when different layers produce extremely different distributions of the output.
+
+In keras, Batch Normalization is implemented as a layer. We add this layer after the layer which we want to normalise.
+
+        model.add(Conv2D(...))
+        model.add(BatchNormalization())
+
+**Using Dropout and Batch Normalization together**
+
+* Dropout tends to slow down the learning process by making learning more careful in the subsequent layers, while Batch Normalization fastens the learning speed.
+* When both these methods are used together, their effects may counter each other. This may lead to a worsened model performance.
+* This is called the disharmony between Dropout and Batch Normalization. You must be careful while using them together.
+
+## Interpreting Models
+
+* On major criticism of deep CNNs is that they are a black box, although they work well, it is hard to understand why they work well.
+* Interpreting the model is important and this can be done by visualising what certain parts of the model do.
+
+In keras, parts of the model can be selected and analyzed.
+
+        model.layers
+        conv1=model.layers[0]   # first layer
+        weights = conv1.get_weights()
+
+get_weights() returns an array of two elements - kernels and
+
+        kernel1 = weights[0]
+        kernel1_1 = kernel1[:, :, 0, 0]
+
+This kernel can be visualised using:
+
+        plt.imshow(kernel1_1)
+
+It is hard to identify what the kernel emphasized by visualising it alone. We can convolve the kernel with an image from the test set.
+
+        filtered_image = convolution(test_image, kernel1_1)
+        plt.imshow(filtered_image)
+
+The result of this image is:
+    ![](images/filtered_image.PNG)
+
+We can see that this kernel depicts the edges of an object in the image.
